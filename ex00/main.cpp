@@ -19,7 +19,7 @@ int main()
 					break;
 
 				case 2: // Invalid grade: above 150
-					b = new Bureaucrat("b", 150);
+					b = new Bureaucrat("b", 151);
 					break;
 
 				case 3: // Valid grade but trying to decrement below 1
@@ -78,12 +78,12 @@ int main()
 	it = 0;
 	try
 	{
-		++it; b = new Bureaucrat("b", 75);		(b->getGradeValue() == 75) ? os << "Sucess: " << it << std::endl : os << "Failure: " << it << std::endl;
-		++it; ++b->getGrade(); 					(b->getGradeValue() == 74) ? os << "Sucess: " << it << std::endl : os << "Failure: " << it << std::endl;
-		++it; --b->getGrade();					(b->getGradeValue() == 75) ? os << "Sucess: " << it << std::endl : os << "Failure: " << it << std::endl;
-		++it; b->getGrade() += 10;				(b->getGradeValue() == 65) ? os << "Sucess: " << it << std::endl : os << "Failure: " << it << std::endl;
-		++it; b->getGrade() -= 10;				(b->getGradeValue() == 75) ? os << "Sucess: " << it << std::endl : os << "Failure: " << it << std::endl;
-		++it; b->getGrade() = 10;				(b->getGradeValue() == 10) ? os << "Sucess: " << it << std::endl : os << "Failure: " << it << std::endl;
+		++it; b = new Bureaucrat("b", 75);		(b->getGradeToInt() == 75) ? os << "Sucess: " << it << std::endl : os << "Failure: " << it << std::endl;
+		++it; ++b->getGrade(); 					(b->getGradeToInt() == 74) ? os << "Sucess: " << it << std::endl : os << "Failure: " << it << std::endl;
+		++it; --b->getGrade();					(b->getGradeToInt() == 75) ? os << "Sucess: " << it << std::endl : os << "Failure: " << it << std::endl;
+		++it; b->getGrade() += 10;				(b->getGradeToInt() == 65) ? os << "Sucess: " << it << std::endl : os << "Failure: " << it << std::endl;
+		++it; b->getGrade() -= 10;				(b->getGradeToInt() == 75) ? os << "Sucess: " << it << std::endl : os << "Failure: " << it << std::endl;
+		++it; b->getGrade() = 10;				(b->getGradeToInt() == 10) ? os << "Sucess: " << it << std::endl : os << "Failure: " << it << std::endl;
 		
 		++it; (b->getGrade() == Bureaucrat(*b).getGrade())		? os << "Sucess: " << it << std::endl : os << "Failure: " << it << std::endl;
 		++it; (b->getGrade() == Bureaucrat("b", 10).getGrade())	? os << "Sucess: " << it << std::endl : os << "Failure: " << it << std::endl;
@@ -98,5 +98,6 @@ int main()
 		std::cout << os.str() << std::endl;
 		std::cout << "Failure " << it << " catched: " << e.what() << std::endl;
 	}
-	b;
+	
+	(void) b;
 }
