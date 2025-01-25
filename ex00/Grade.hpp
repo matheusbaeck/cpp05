@@ -24,28 +24,28 @@ class Grade
 
 		bool isValidGrade(int value, std::string caller) const;
 
-		Grade( void );
 	public:
-		Grade(int value);
-		Grade(const Grade & src);
-		~Grade( );
+		Grade( void );
+		Grade( int );
+		Grade( const Grade & );
+		~Grade();
 
-		int Value() const;
+		int Value( void ) const;
 
-		Grade& operator=(const Grade& other);
+		Grade& operator=( const Grade& );
 
-		Grade& operator++();
-		Grade& operator--();
+		Grade& operator++( void );
+		Grade& operator--( void );
 		Grade& operator+=( int );
 		Grade& operator-=( int );
 		Grade& operator=( int );
 
-		bool operator==(const Grade& other) const;
-		bool operator!=(const Grade& other) const;
-		bool operator<(const Grade& other) const;
-		bool operator>(const Grade& other) const;
-		bool operator<=(const Grade& other) const;
-		bool operator>=(const Grade& other) const;
+		bool operator==( const Grade& ) const;
+		bool operator!=( const Grade& ) const;
+		bool operator<( const Grade& ) const;
+		bool operator>( const Grade& ) const;
+		bool operator<=( const Grade& ) const;
+		bool operator>=( const Grade& ) const;
 
 
 	class GradeTooHighException : public std::exception {
@@ -69,5 +69,7 @@ class Grade
 			const char* what() const throw();
 	};
 };
+
+std::ostream& operator<<(std::ostream& os, const Grade& g);
 
 # endif

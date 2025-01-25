@@ -13,8 +13,6 @@ typedef Grade grade;
 class Bureaucrat
 {
 	private:
-
-		
 		const std::string _name;
 		grade _grade;
 
@@ -28,6 +26,7 @@ class Bureaucrat
 
 		const std::string &	getName() const;
 		grade & 			getGrade();
+		const grade & 		getGrade() const;
 		int					getGradeToInt() const;
 		void				changeGrade( int );
 
@@ -36,9 +35,7 @@ class Bureaucrat
 				std::string _message;
 
 			public:
-				GradeTooHighException(std::string message = "") {
-					_message = message;
-				}
+				GradeTooHighException(std::string message = "") : _message(message) {}
 
 				virtual ~GradeTooHighException() throw() {}
 
@@ -52,9 +49,7 @@ class Bureaucrat
 				std::string _message;
 
 			public:
-				GradeTooLowException(std::string message = "") {
-					_message = message;
-				}
+				GradeTooLowException(std::string message = "") : _message(message) {}
 
 				virtual ~GradeTooLowException() throw() {}
 
@@ -64,5 +59,7 @@ class Bureaucrat
 		};
 
 };
+
+std::ostream& operator<<(std::ostream& os, const Bureaucrat& b);
 
 #endif

@@ -6,7 +6,7 @@
 #    By: math <math@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/04 18:22:37 by math42            #+#    #+#              #
-#    Updated: 2025/01/13 15:44:19 by math             ###   ########.fr        #
+#    Updated: 2025/01/25 14:25:47 by math             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,6 +36,7 @@ clean:
 fclean: clean
 	find . -name "*.o" -exec rm -f {} +
 	rm -rf $(NAME)
+	rm -rf .vscode
 	
 
 re: fclean all

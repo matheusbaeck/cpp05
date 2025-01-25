@@ -13,7 +13,7 @@ bool Grade::isValidGrade(int value, std::string caller) const
 	return (true);
 }
 
-Grade::Grade( void ) {}
+Grade::Grade( void ) : _value(_min_grade) {}
 Grade::Grade(int value) { if (isValidGrade(value, "ctor")) _value = value; }
 Grade::Grade(const Grade & src) { *this = src; }
 Grade::~Grade() {}
