@@ -5,7 +5,7 @@ int main()
 	std::stringstream	os;
 	int					it = 0;
 	bool				end_cases = false;
-	Bureaucrat			*b;
+	Bureaucrat			*b = NULL;
 
 	while (!end_cases)
 	{
@@ -74,7 +74,11 @@ int main()
 		{
 			std::cout << "Success: " << it << ": "<< e.what() << std::endl;
 		}
-	}
+		if (b != NULL) {
+			delete b;
+			b = NULL;
+		}
+		}
 	it = 0;
 	try
 	{
@@ -97,6 +101,10 @@ int main()
 	{
 		std::cout << os.str() << std::endl;
 		std::cout << "Failure " << it << " catched: " << e.what() << std::endl;
+	}
+	if (b != NULL) {
+		delete b;
+		b = NULL;
 	}
 	
 	(void) b;

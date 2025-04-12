@@ -20,7 +20,14 @@ Grade::~Grade() {}
 
 int Grade::Value() const { return _value; }
 
-Grade& Grade::operator=(const Grade& other) { if (*this != other && isValidGrade(other.Value(), "operator=")) this->_value = other.Value(); return *this; }
+Grade& Grade::operator=(const Grade& other) 
+{ 
+	if (*this != other && isValidGrade(other.Value(), "operator="))
+	{
+		this->_value = other.Value();
+	}
+	return *this;
+}
 
 Grade& Grade::operator++() 					{ if (isValidGrade(_value - 1, "operator++")) --_value; 			return *this; }
 Grade& Grade::operator--() 					{ if (isValidGrade(_value + 1, "operator--")) ++_value; 			return *this; }

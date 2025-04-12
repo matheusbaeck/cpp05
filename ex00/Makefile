@@ -6,7 +6,7 @@
 #    By: math <math@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/09/04 18:22:37 by math42            #+#    #+#              #
-#    Updated: 2025/01/25 14:25:47 by math             ###   ########.fr        #
+#    Updated: 2025/04/06 12:55:45 by math             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,18 @@ OBJS        = $(addprefix $(OBJDIR)/, $(SRCS:.cpp=.o))
 
 CC          = c++
 CFLAGS      = -Wall -Wextra -Werror -std=c++98
+
+EX_NAME = $(notdir $(CURDIR))
+
+ifeq ($(EX_NAME), ex00)
+	CFLAGS += -DEX00
+endif
+ifeq ($(EX_NAME), ex01)
+	CFLAGS += -DEX01
+endif
+ifeq ($(EX_NAME), ex02)
+	CFLAGS += -DEX02
+endif
 
 all: $(NAME)
 

@@ -5,10 +5,14 @@
 # include <string>
 # include <stdexcept>
 # include <iostream>
-#include "Grade.hpp"
 
+# include "Grade.hpp"
 
-typedef Grade grade;
+#ifndef EX00
+# include "Form.hpp"
+
+class FORM;
+#endif
 
 class Bureaucrat
 {
@@ -29,19 +33,23 @@ class Bureaucrat
 		const grade & 		getGrade() const;
 		int					getGradeToInt() const;
 		void				changeGrade( int );
+		void				incrementGrade( int );
+		void 				decrementGrade( int );
+		static Grade		validateGrade( int );
+		#ifndef EX00
+		void				signForm(FORM & ) const;
+		#endif
+		#ifdef EX02
+		void executeForm(FORM const & form);
+		#endif
 
 		class GradeTooHighException : public std::exception {
 			private:
 				std::string _message;
-
 			public:
-				GradeTooHighException(std::string message = "") : _message(message) {}
-
-				virtual ~GradeTooHighException() throw() {}
-
-				const char* what() const throw() {
-					return _message.c_str();
-				}
+				GradeTooHighException( std::string message );
+				virtual ~GradeTooHighException() throw();
+				const char* what() const throw();
 		};
 
 		class GradeTooLowException : public std::exception {
@@ -49,13 +57,9 @@ class Bureaucrat
 				std::string _message;
 
 			public:
-				GradeTooLowException(std::string message = "") : _message(message) {}
-
-				virtual ~GradeTooLowException() throw() {}
-
-				const char* what() const throw() {
-					return _message.c_str();
-				}
+				GradeTooLowException( std::string message );
+				virtual ~GradeTooLowException() throw();
+				const char* what() const throw();
 		};
 
 };

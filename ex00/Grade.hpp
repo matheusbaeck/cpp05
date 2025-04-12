@@ -64,11 +64,12 @@ class Grade
 
 		public:
 			GradeTooLowException(std::string caller);
-
 			virtual ~GradeTooLowException() throw();
 			const char* what() const throw();
 	};
 };
+
+typedef class Grade grade;
 
 std::ostream& operator<<(std::ostream& os, const Grade& g);
 

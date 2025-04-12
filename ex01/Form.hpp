@@ -8,29 +8,53 @@
 # include "Grade.hpp"
 # include "Bureaucrat.hpp"
 
+#ifndef EX02
+#define FORM Form
+#else
+#define FORM AForm
+#endif
 
-typedef Grade grade;
+class Bureaucrat;
 
-class Form
+class FORM
 {
 	private:
 		const std::string _name;
-		const grade _requirement;
+		#ifdef EX02
+		std::string _target;
+		#endif
+		const grade _signRequirement;
+		const grade _executeRequirement;
 		bool _signed;
 	
 	public:
-		Form( void );
-		Form( const std::string, int );
-		Form( const Form & );
-		~Form( void );
+		FORM( void );
+		#ifndef EX02
+		FORM( const std::string, int , int );
+		#else
+		FORM( const std::string, std::string, int, int);
+		#endif
+		FORM( const FORM & );
+		~FORM( void );
 
-		Form & operator=(const Form & );
+		FORM & operator=(const FORM & );
 
 		const std::string& Name( void ) const;
-		const grade& Requirement( void ) const;
-		bool isSigned( void );
+		const grade& GetSignRequirement( void ) const;
+		const grade& GetExecRequirement( void ) const;
+		#ifdef EX02
+		std::string Target( void ) const;
+		void SetTarget( std::string );
+		#endif
 
+
+		bool isSigned( void ) const;
 		bool beSigned( const Bureaucrat& );
+
+		#ifdef EX02
+		virtual void execute( Bureaucrat const & ) const;
+		virtual void beExecuted( void ) const = 0;
+		#endif
 
 		class GradeTooHighException : public std::exception {
 			private:
@@ -48,7 +72,6 @@ class Form
 
 			public:
 				GradeTooLowException( const std::string& );
-
 				virtual ~GradeTooLowException() throw();
 				const char* what() const throw();
 		};
