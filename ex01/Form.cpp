@@ -1,4 +1,4 @@
-#include "Form.hpp"
+#include FORM_INCLUDE
 
 // "'"SUPERT SMART"'"" function to pass subject
 static Grade validateGrade(int grade_value)
@@ -82,21 +82,23 @@ const grade& FORM::GetSignRequirement( void ) const { return this->_signRequirem
 const grade& FORM::GetExecRequirement( void ) const { return this->_executeRequirement; }
 bool FORM::isSigned( void ) const { return this->_signed; }
 
-
-bool FORM::beSigned(const Bureaucrat& b)
+#ifdef EX02
+const std::string& FORM::Target( void ) const
 {
-	if (!this->isSigned())
+	return _target;
+}
+#endif
+
+
+void FORM::beSigned(const Bureaucrat& b)
+{
+	if (this->isSigned()) throw FORM::SignatureException("is already signed");
+	const grade& b_grade = b.getGrade();
+	if (b_grade < this->_signRequirement)
 	{
-		const grade& b_grade = b.getGrade();
-		if (b_grade < this->_signRequirement)
-		{
-			throw Bureaucrat::GradeTooLowException("Bureucrat grade is not suficient to sign form");
-		}
-		_signed = true;
-		return true;
+		throw FORM::GradeTooLowException("Bureucrat grade is not suficient to sign form");
 	}
-	/* throw apropriated error */
-	return false;
+	_signed = true;
 }
 
 #ifdef EX02
@@ -110,27 +112,29 @@ void FORM::execute(Bureaucrat const & b) const
 }
 #endif
 
-FORM::GradeTooHighException::GradeTooHighException(const std::string& message) 
-{
-	std::stringstream ss;
-	ss << "FormHighRequirement: " << message;
-	_message = ss.str();
-}
+FORM::GradeTooHighException::GradeTooHighException(const std::string& message) { _message = message; }
 FORM::GradeTooHighException::~GradeTooHighException() throw() {}
 const char* FORM::GradeTooHighException::what() const throw() { return _message.c_str(); }
 
-FORM::GradeTooLowException::GradeTooLowException(const std::string& message)
-{
-	std::stringstream ss;
-	ss << ": " << "FormLowRequirement: " << message;
-	_message = ss.str();
-}
+FORM::GradeTooLowException::GradeTooLowException(const std::string& message) { _message = message; }
 FORM::GradeTooLowException::~GradeTooLowException() throw() {}
 const char* FORM::GradeTooLowException::what() const throw() { return _message.c_str(); }
 
+FORM::SignatureException::SignatureException(const std::string& message) { _message = message; }
+FORM::SignatureException::~SignatureException() throw() {}
+const char* FORM::SignatureException::what() const throw() { return _message.c_str(); }
+
+FORM::FormExecutionException::FormExecutionException(const std::string& message) { _message = message; }
+FORM::FormExecutionException::~FormExecutionException() throw() {}
+const char* FORM::FormExecutionException::what() const throw() { return _message.c_str(); }
+
 std::ostream& operator<<(std::ostream& os, const FORM& f)
 {
-	os << f.Name() << ", requirements: to sign(" 
+	os << "Form " << f.Name();
+	#ifdef EX02
+	os << ", Target:" << f.Target();
+	#endif
+	os << ", requirements: to sign(" 
 	<< f.GetSignRequirement() << "), to execute(" 
 	<< f.GetExecRequirement() << ").";
 	return (os);

@@ -9,7 +9,7 @@
 # include "Grade.hpp"
 
 #ifndef EX00
-# include "Form.hpp"
+#include FORM_INCLUDE
 
 class FORM;
 #endif

@@ -63,11 +63,6 @@ int main()
 					<< std::endl;
 		std::cout << "b sign f00: ";
 		b->signForm(*f);
-		if (!f->beSigned(*b))
-		{
-			throw std::runtime_error("bureaucrat should be able to sign this form");
-		}
-
 	}
 	catch (const std::exception& e)
 	{

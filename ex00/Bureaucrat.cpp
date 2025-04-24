@@ -12,9 +12,9 @@ Bureaucrat& Bureaucrat::operator=(const Bureaucrat& other) { if (this != &other)
 
 
 const std::string &	Bureaucrat::getName() const	{ return _name; }
-Grade & Bureaucrat::getGrade()					{ return _grade; }
-const grade & Bureaucrat::getGrade() const {return _grade; }
-int Bureaucrat::getGradeToInt() const	{ return _grade.Value(); }
+grade& Bureaucrat::getGrade()					{ return _grade; }
+const grade& Bureaucrat::getGrade() const		{ return _grade; }
+int Bureaucrat::getGradeToInt() const			{ return _grade.Value(); }
 
 
 
@@ -58,17 +58,22 @@ void Bureaucrat::signForm(FORM & form) const
 {
 	try
 	{
-		if (!form.beSigned(*this))
-		{
-			throw std::runtime_error("Form was already signed");
-		}
+		form.beSigned(*this);
+		// if (!form.beSigned(*this))
+		// {
+		// 	throw std::runtime_error("Form was already signed");
+		// }
 		std::cout << this->getName() << " signed form " << form.Name() << std::endl;
+	}
+	catch (const FORM::GradeTooLowException& e)
+	{
+		/* define a specific behavior for FORM::Grade low, maybe throw a Bureucrat exception*/
+		throw;
 	}
 	catch(const std::exception& e)
 	{
 		std::cerr << this->getName() << " couldn’t sign " << form.Name() << " because " << e.what() << std::endl;
 	}
-	
 }
 #endif
 
@@ -122,10 +127,22 @@ void Bureaucrat::executeForm(FORM const & f)
 	catch(FORM::GradeTooLowException& e)
 	{
 		std::cerr << e.what() << std::endl;
+		throw Bureaucrat::GradeTooLowException(e.what());
+	}
+	catch(FORM::SignatureException& e)
+	{
+		std::cerr << e.what() << std::endl;
+		throw;
+	}
+	catch(FORM::FormExecutionException& e)
+	{
+		std::cerr << e.what() << std::endl;
+		throw;
 	}
 	catch(const std::exception& e)
 	{
 		std::cerr << "Form ["<< *this <<"] execution failure: " << e.what() << std::endl;
+		throw;
 	}
 }
 #endif
