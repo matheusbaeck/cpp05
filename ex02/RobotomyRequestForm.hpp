@@ -1,48 +1,28 @@
 #ifndef ROBOTOMYREQUESTFORM_HPP
 # define ROBOTOMYREQUESTFORM_HPP
 
-#include "Form.hpp"
+# include <iostream>
+# include <cstdlib>
+# include <ctime>
 
-#define SIGN_GRADE 72
-#define EXEC_GRADE 45
-#define NAME "RobotomyRequest"
+#include FORM_INCLUDE
 
-class RobotomyRequestForm : AForm
+#define CONCRETE_FORM RobotomyRequestForm
+
+class CONCRETE_FORM : public AForm
 {
-	private:
-		std::string _target;
 	public:
-		RobotomyRequestForm( void );
-		RobotomyRequestForm( std::string, std::string );
-		RobotomyRequestForm( const RobotomyRequestForm& );
-		virtual ~RobotomyRequestForm();
+		CONCRETE_FORM( void );
+		CONCRETE_FORM( std::string );
+		CONCRETE_FORM( const CONCRETE_FORM& );
+		virtual ~CONCRETE_FORM();
 
-		RobotomyRequestForm& operator=(const RobotomyRequestForm& );
+		CONCRETE_FORM& operator=(const CONCRETE_FORM& );
 
-		virtual bool beSigned(const Bureaucrat& )
+		void beExecuted( void ) const;
 };
 
-RobotomyRequestForm::RobotomyRequestForm(void) _target("target")
-	: AForm(NAME, SIGN_GRADE, EXEC_GRADE) {}
-RobotomyRequestForm::RobotomyRequestForm(std::string target) _target(target)
-	: AForm(NAME, SIGN_GRADE, EXEC_GRADE) {}
-RobotomyRequestForm::RobotomyRequestForm( const RobotomyRequestForm& other)
-	: AForm(NAME, SIGN_GRADE, EXEC_GRADE)
-{
-	if (*this != other)
-	{
-		this->_target = other.Target;
-	}
-	return *this;
-}
+std::ostream& operator<<(std::ostream& os, const FORM& f);
 
-void RobotomyRequestForm::beExecuted()
-{
-	/*Makes some drilling noises. Then, informs that <target> has been robotomized
-	successfully 50% of the time. Otherwise, informs that the robotomy failed*/
-	std::cout << /* some message */ << std::endl;
-	/* throw error */
-	return false;
-}
-
+#undef CONCRETE_FORM
 #endif

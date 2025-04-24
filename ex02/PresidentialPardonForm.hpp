@@ -1,49 +1,24 @@
 #ifndef PRESENTIALPARDONFORM_HPP
 # define PRESENTIALPARDONFORM_HPP
 
-#include "Form.hpp"
+#include FORM_INCLUDE
 
-#define SIGN_GRADE 72
-#define EXEC_GRADE 45
-#define NAME "PresidentialPardon"
+#define CONCRETE_FORM PresidentialPardonForm
 
-typedef class Form AForm
-
-class PresidentialPardonForm : AForm
+class CONCRETE_FORM : public AForm
 {
 	public:
-		PresidentialPardonForm( void );
-		PresidentialPardonForm( std::string, std::string );
-		PresidentialPardonForm( const PresidentialPardonForm& );
-		virtual ~PresidentialPardonForm();
+		CONCRETE_FORM( void );
+		CONCRETE_FORM( std::string );
+		CONCRETE_FORM( const CONCRETE_FORM& );
+		virtual ~CONCRETE_FORM();
 
-		PresidentialPardonForm& operator=(const PresidentialPardonForm& );
+		CONCRETE_FORM& operator=(const CONCRETE_FORM& );
 
-		virtual bool beSigned(const Bureaucrat& )
+		void beExecuted( void ) const;
 };
 
-PresidentialPardonForm::PresidentialPardonForm(void)
-	: AForm(NAME, "nobody", SIGN_GRADE, EXEC_GRADE) {}
-PresidentialPardonForm::PresidentialPardonForm(std::string target) _target(target)
-	: AForm(NAME, target, SIGN_GRADE, EXEC_GRADE) {}
-PresidentialPardonForm::PresidentialPardonForm( const PresidentialPardonForm& other)
-	: AForm(NAME, other.Target(), SIGN_GRADE, EXEC_GRADE)
+std::ostream& operator<<(std::ostream& os, const FORM& f);
 
-PresidentialPardonForm& PresidentialPardonForm::operator=(const PresidentialPardonForm& other)
-{
-	if (this != &other)
-	{
-		AForm::operator=(other);
-	}
-	return (*this);
-}
-
-void PresidentialPardonForm::beExecuted()
-{
-	/*Informs that <target> has been pardoned by Zaphod Beeblebrox..*/
-	std::cout << /* some message */ << std::endl;
-	/* throw error */
-	return false;
-}
-
+#undef CONCRETE_FORM
 #endif
