@@ -92,11 +92,11 @@ const std::string& FORM::Target( void ) const
 
 void FORM::beSigned(const Bureaucrat& b)
 {
-	if (this->isSigned()) throw FORM::SignatureException("is already signed");
+	if (this->isSigned()) throw FORM::SignatureException("Form is already signed!");
 	const grade& b_grade = b.getGrade();
 	if (b_grade < this->_signRequirement)
 	{
-		throw FORM::GradeTooLowException("Bureucrat grade is not suficient to sign form");
+		throw FORM::GradeTooLowException("Form Grade is to Low!");
 	}
 	_signed = true;
 }
@@ -130,12 +130,11 @@ const char* FORM::FormExecutionException::what() const throw() { return _message
 
 std::ostream& operator<<(std::ostream& os, const FORM& f)
 {
-	os << "Form " << f.Name();
+	os << f.Name() << "[";
 	#ifdef EX02
-	os << ", Target:" << f.Target();
+	os << "Target:" << f.Target() << ", ";
 	#endif
-	os << ", requirements: to sign(" 
-	<< f.GetSignRequirement() << "), to execute(" 
-	<< f.GetExecRequirement() << ").";
+	os << "ReqToSign:" << f.GetSignRequirement() << ", ";
+	os << "ReqToExecute:" << f.GetExecRequirement() << "]";
 	return (os);
 }

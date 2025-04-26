@@ -4,26 +4,47 @@
 #include "PresidentialPardonForm.hpp"
 #include "RobotomyRequestForm.hpp"
 
+#include <sstream>
+#include <fstream>
+#include <iostream>
+
 #ifndef TARGET
 # define TARGET "AnyBody"
 #endif
-#define BUREAUCRATE_NAME "Zaz"
 
+#define LOG(msg) std::cout << msg << std::endl;
+#define ERR(msg) std::cerr << msg << std::endl;
+#define DIV(div) std::cout << std::endl << "-----------------<"<<div<<">------------------" << std::endl << std::endl;
+
+#define BUREAUCRAT "Bureaucrat"
 #define CASE (__COUNTER__ + 1)
 
 #define SIGN_LOW_GRADE(FormType) \
 	case CASE: \
+		DIV(#FormType) \
 		f = new FormType(TARGET); \
-		b = new Bureaucrat(BUREUCRAT, MIN_GRADE); \
-		os << *b << " Try to sign " << *f << " :"; \
+		b = new Bureaucrat(BUREAUCRAT, MIN_GRADE); \
+		LOG(*b << " Try to sign " << *f << " :") \
+		f->beSigned(*b); \
+		break; \
+
+#define DOUBLE_SIGN_CASE(FormType) \
+	case CASE: \
+		f = new FormType(TARGET); \
+		b = new Bureaucrat(BUREAUCRAT, MAX_GRADE); \
 		b->signForm(*f); \
+		if (f->isSigned()) \
+		{ \
+			LOG(*b << " Try to sign " << *f << " :") \
+			f->beSigned(*b); \
+		} \
 		break; \
 
 #define EXECUTE_LOW_GRADE(FormType) \
 	case CASE: \
 		f = new FormType(TARGET); \
-		b = new Bureaucrat(BUREAUCRATE_NAME, MAX_GRADE); \
-		os << *b << " Try to execute " << *f << " :"; \
+		b = new Bureaucrat(BUREAUCRAT, MAX_GRADE); \
+		LOG(*b << " Try to execute " << *f << " :") \
 		b->signForm(*f); \
 		b->changeGrade(MIN_GRADE); \
 		b->executeForm(*f); \
@@ -32,42 +53,39 @@
 #define EXECUTE_NOT_SIGNED(FormType) \
 	case CASE: \
 		f = new FormType(TARGET); \
-		b = new Bureaucrat(BUREAUCRATE_NAME, MAX_GRADE); \
-		os << *b << " Try to execute not signed " << *f << " :"; \
+		b = new Bureaucrat(BUREAUCRAT, MAX_GRADE); \
+		LOG(*b << " Try to execute not signed " << *f << " :") \
 		b->executeForm(*f); \
 		break; \
 
-// Wrapper macro for full switch block
 #define MUST_FAIL_CASES(FormType) \
 		SIGN_LOW_GRADE(FormType) \
+		DOUBLE_SIGN_CASE(FormType) \
 		EXECUTE_LOW_GRADE(FormType) \
 		EXECUTE_NOT_SIGNED(FormType) \
 
 
-#include <sstream>
-#include <fstream>
-#include <iostream>
 
-void ReadFile(const std::string& fileName, std::ostringstream& out)
+
+void ReadFile(const std::string& fileName)
 {
 	std::ifstream file(fileName.c_str());
 
 	if (!file.is_open())
 	{
-		out << "Failed to open file: " << fileName << std::endl;
+		LOG("Failed to open file: " << fileName);
 		return;
 	}
 
 	std::string line;
 	while (std::getline(file, line))
 	{
-		out << line << std::endl;
+		LOG(line);
 	}
 
 	file.close();
 }
 
-#define BUREUCRAT "james"
 int main()
 {
 	std::ostringstream os;
@@ -88,16 +106,16 @@ int main()
 				MUST_FAIL_CASES(PresidentialPardonForm);
 				default:
 					end_cases = true;
-					std::cout << "----end of error cases-----" << std::endl;
+					DIV("end of error cases")
 					break;
 
 			}
 			if (!end_cases)
-					std::cerr << "[❌ " << it << " " << os << "]: case did not throwed apropriated err" << std::endl;
+					LOG("[❌] " << it << " " << os << ": case did not throwed apropriated err")
 		}
 		catch(const std::exception& e)
 		{
-			std::cout << "[✅ " << it << " " << os.str() << "]catched: "<< e.what() << std::endl;
+			LOG("[✅ " << it << " " << os.str() << "]catched: "<< e.what())
 		}
 		//CLEANUP
 		if (b != NULL) {
@@ -115,43 +133,46 @@ int main()
 	it = 0;
 	try
 	{
-	b	 = new Bureaucrat(BUREAUCRATE_NAME, MAX_GRADE);
-		os << "[✅ " << ++it << "] Created Bureaucrat with MAX_GRADE: " << *b << std::endl;
+		DIV("Instance of Bureaucrate max grade" << MAX_GRADE)
+		b	 = new Bureaucrat(BUREAUCRAT, MAX_GRADE);
+		LOG("[✅] " << ++it << " Created Bureaucrat with MAX_GRADE: " << *b);
 
+
+		DIV("Instance of ShrubberyCreationForm")
 		f = new ShrubberyCreationForm(TARGET);
-		os << "[✅ " << ++it << "] Created ShrubberyCreationForm for TARGET" << std::endl;
+		LOG("[✅] " << ++it << " Created ShrubberyCreationForm for TARGET");
 		b->signForm(*f);
-		os << "[✅ " << it << ".1] Signed form successfully" << std::endl;
+		LOG("[✅ " << it << ".1 Signed form successfully");
 		b->executeForm(*f);
-		os << "[✅ " << it << ".2] Executed form successfully" << std::endl;
-		os << "================= file:" << TARGET << " =================" << std::endl;
-		ReadFile(std::string(TARGET) + "_shrubbery", os);
-		os << "================= file:" << TARGET << " =================" << std::endl;
+		LOG("[✅] " << it << ".2 Executed form successfully");
+		LOG("================= file:" << TARGET << " =================");
+		ReadFile(std::string(TARGET) + "_shrubbery");
+		LOG("================= file:" << TARGET << " =================");
 		delete f;
 
+		DIV("Instance of PresidentialPardonForm")
 		f = new PresidentialPardonForm(TARGET);
-		os << "[✅ " << ++it << "] Created PresidentialPardonForm for TARGET" << std::endl;
+		LOG("[✅] " << ++it << " Created PresidentialPardonForm for TARGET");
 		b->signForm(*f);
-		os << "[✅ " << it << ".1] Signed form successfully" << std::endl;
+		LOG("[✅] " << it << ".1 Signed form successfully");
 		b->executeForm(*f);
-		os << "[✅ " << it << ".2] Executed form successfully" << std::endl;
+		LOG("[✅] " << it << ".2 Executed form successfully");
 		delete f;
 
+		DIV("Instance of RobotomyRequestForm")
 		f = new RobotomyRequestForm(TARGET);
-		os << "[✅ " << ++it << "] Created RobotomyRequestForm for TARGET" << std::endl;
+		LOG("[✅] " << ++it << " Created RobotomyRequestForm for TARGET");
 		b->signForm(*f);
-		os << "[✅ " << it << ".1] Signed form successfully" << std::endl;
+		LOG("[✅] " << it << ".1 Signed form successfully");
 		b->executeForm(*f);
-		os << "[✅ " << it << ".2] Executed form successfully" << std::endl;
+		LOG("[✅] " << it << ".2 Executed form successfully");
 		delete f;
 		delete b;
 
-		std::cout << os.str();
 	}
 	catch(const std::exception& e)
 	{
-		std::cout << os.str() << std::endl;
-		std::cout << "[❌ " << it << "]catched: " << e.what() << std::endl;
+		ERR("[❌] " << it << "catched: " << e.what())
 	}
 	#if false
 	#endif

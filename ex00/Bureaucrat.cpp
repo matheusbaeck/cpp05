@@ -23,59 +23,6 @@ Any attempt to instantiate a Bureaucrat using an invalid grade must throw an exc
 either a Bureaucrat::GradeTooHighException or a Bureaucrat::GradeTooLowException.
  */
 //Method to catch Grade::Exception and throw Burocrat::Exception
-void Bureaucrat::changeGrade(int newGrade)
-{
-	try
-	{
-		_grade = newGrade;
-	}
-	catch(Grade::GradeTooLowException& e)
-	{
-		throw Bureaucrat::GradeTooLowException(e.what());
-	}
-	catch (Grade::GradeTooHighException& e)
-	{
-		throw Bureaucrat::GradeTooHighException(e.what());
-	}
-	catch (const std::exception& e)
-	{
-		throw e;
-	}
-}
-
-void Bureaucrat::incrementGrade( int ammount )
-{
-	this->_grade += ammount;
-}
-
-void Bureaucrat::decrementGrade( int ammount )
-{
-	this->_grade -= ammount;
-}
-
-#ifndef EX00
-void Bureaucrat::signForm(FORM & form) const
-{
-	try
-	{
-		form.beSigned(*this);
-		// if (!form.beSigned(*this))
-		// {
-		// 	throw std::runtime_error("Form was already signed");
-		// }
-		std::cout << this->getName() << " signed form " << form.Name() << std::endl;
-	}
-	catch (const FORM::GradeTooLowException& e)
-	{
-		/* define a specific behavior for FORM::Grade low, maybe throw a Bureucrat exception*/
-		throw;
-	}
-	catch(const std::exception& e)
-	{
-		std::cerr << this->getName() << " couldn’t sign " << form.Name() << " because " << e.what() << std::endl;
-	}
-}
-#endif
 
 Grade Bureaucrat::validateGrade( int value )
 {
@@ -97,9 +44,102 @@ Grade Bureaucrat::validateGrade( int value )
 	}
 }
 
+void Bureaucrat::changeGrade(int newGrade)
+{
+	try
+	{
+		grade old = this->_grade;
+		_grade = newGrade;
+		std::cout << *this << " changed it's grade " << old << std::endl;
+	}
+	catch(Grade::GradeTooLowException& e)
+	{
+		throw Bureaucrat::GradeTooLowException(e.what());
+	}
+	catch (Grade::GradeTooHighException& e)
+	{
+		throw Bureaucrat::GradeTooHighException(e.what());
+	}
+	catch (const std::exception& e)
+	{
+		throw e;
+	}
+}
+
+void Bureaucrat::incrementGrade( int ammount )
+{
+	try
+	{
+		grade old = this->_grade;
+		this->_grade += ammount;
+		std::cout << *this << " incremented it's grade " << old << " by " << ammount << std::endl;
+	}
+	catch(Grade::GradeTooLowException& e)
+	{
+		throw Bureaucrat::GradeTooLowException(e.what());
+	}
+	catch (Grade::GradeTooHighException& e)
+	{
+		throw Bureaucrat::GradeTooHighException(e.what());
+	}
+	catch (const std::exception& e)
+	{
+		throw e;
+	}
+	
+}
+
+void Bureaucrat::decrementGrade( int ammount )
+{
+	try
+	{
+		grade old = this->_grade;
+		this->_grade -= ammount;
+		std::cout << *this << " decremented it's grade " << old << " by " << ammount << std::endl;
+	}
+	catch(Grade::GradeTooLowException& e)
+	{
+		throw Bureaucrat::GradeTooLowException(e.what());
+	}
+	catch (Grade::GradeTooHighException& e)
+	{
+		throw Bureaucrat::GradeTooHighException(e.what());
+	}
+	catch (const std::exception& e)
+	{
+		throw e;
+	}
+}
+
+#ifndef EX00
+void Bureaucrat::signForm(FORM & form) const
+{
+	try
+	{
+		form.beSigned(*this);
+		std::cout << this->getName() << " signed form " << form.Name() << std::endl;
+	}
+	catch (const FORM::SignatureException& e)
+	{
+		std::cerr << this->getName() << " couldn’t sign " << form.Name() << " because " << e.what() << std::endl;
+		std::cout << "Try signing a diferent Form" << std::endl;
+	}
+	catch (const FORM::GradeTooLowException& e)
+	{
+		std::cerr << this->getName() << " couldn’t sign " << form.Name() << " because " << e.what() << std::endl;
+		std::cout << "You need a grade higher than " << form.GetSignRequirement() << " to sign form " << form << std::endl;
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << this->getName() << " couldn’t sign " << form.Name() << " because " << e.what() << std::endl;
+	}
+}
+#endif
+
+
 std::ostream& operator<<(std::ostream& os, const Bureaucrat& b)
 {
-	os << b.getName() << ", bureaucrat grade " << b.getGradeToInt() << ".";
+	os << b.getName() << "[Grade:" << b.getGradeToInt() << "]";
 	return (os);
 }
 
@@ -145,9 +185,5 @@ void Bureaucrat::executeForm(FORM const & f)
 		throw;
 	}
 }
-#endif
 
-// Bureaucrat::Grade operator+(const Grade& grade, int delta);
-// Bureaucrat::Grade operator-(const Grade& grade, int delta);
-// Bureaucrat::Grade operator+(int delta, const Grade& grade);
-// Bureaucrat::Grade operator-(int delta, const Grade& grade);
+#endif

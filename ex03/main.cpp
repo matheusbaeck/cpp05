@@ -12,19 +12,18 @@
 int main()
 {
 	std::ostringstream os;
-	std::cout << "\n========== INTERN TEST ==========\n";
 	try
 	{
 		Intern intern;
-		const AForm& shrub = intern.makeForm("Shrubbery", "InternShrub");
+		const AForm& shrub = intern.makeForm("Shrubbery", "Zaz");
 		intern.trackAndClean(const_cast<AForm*>(&shrub));
 		std::cout << "[✅] Intern created: " << shrub << std::endl;
 
-		const AForm& robot = intern.makeForm("Robotomy", "InternBot");
+		const AForm& robot = intern.makeForm("Robotomy", "Thor");
 		intern.trackAndClean(const_cast<AForm*>(&robot));
 		std::cout << "[✅] Intern created: " << robot << std::endl;
 
-		const AForm& pardon = intern.makeForm("Presidential", "InternPrez");
+		const AForm& pardon = intern.makeForm("Presidential", "Mamagalh");
 		intern.trackAndClean(const_cast<AForm*>(&pardon));
 		std::cout << "[✅] Intern created: " << pardon << std::endl;
 
